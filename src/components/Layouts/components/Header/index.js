@@ -1,13 +1,15 @@
-import { faCircleXmark, faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCircleXmark, faMagnifyingGlass, faSignIn, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react/headless';
 import classNames from 'classnames/bind';
 import { useState } from 'react';
 
 import images from '~/assets/images';
-import { Wrapper as PopperWrapper } from '../Popper';
+import AccountItem from '~/components/AccountItem';
+import Button from '~/components/Button';
+import { Wrapper as PopperWrapper } from '~/components/Popper';
 import styles from './Header.module.scss';
-import AccountItem from '../AccountItem';
+
 const cx = classNames.bind(styles);
 function Header() {
   const [searchResult, setSeatchResult] = useState([]);
@@ -36,12 +38,15 @@ function Header() {
               <FontAwesomeIcon icon={faCircleXmark} />
             </button>
             <FontAwesomeIcon className={cx('loading')} icon={faSpinner} />
-            <button className={cx('search-btn')} onClick={() => setSeatchResult(['haha'])}>
+            <button className={cx('search-btn')} onClick={() => setSeatchResult([])}>
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </button>
           </div>
         </Tippy>
-        <div className={cx('actions')}></div>
+        <div className={cx('actions')}>
+          <Button text>Upload</Button>
+          <Button rounded>Log In</Button>
+        </div>
       </div>
     </header>
   );
