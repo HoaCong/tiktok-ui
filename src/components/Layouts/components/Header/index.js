@@ -1,7 +1,6 @@
 import {
   faCircleQuestion,
   faCircleXmark,
-  faCloudUpload,
   faCoins,
   faEarthAsia,
   faEllipsisVertical,
@@ -18,10 +17,11 @@ import HeadLessTippy from '@tippyjs/react/headless';
 import classNames from 'classnames/bind';
 import { useState } from 'react';
 import 'tippy.js/dist/tippy.css';
-
 import images from '~/assets/images';
 import AccountItem from '~/components/AccountItem';
 import Button from '~/components/Button';
+import { UploadIcon } from '~/components/Icons';
+import Image from '~/components/Image';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import Menu from '~/components/Popper/Menu';
 import styles from './Header.module.scss';
@@ -122,7 +122,7 @@ function Header() {
             <>
               <Tippy delay={[0, 200]} content="Upload video">
                 <button className={cx('action-btn')}>
-                  <FontAwesomeIcon icon={faCloudUpload} />
+                  <UploadIcon />
                 </button>
               </Tippy>
             </>
@@ -134,7 +134,7 @@ function Header() {
           )}
           <Menu items={currentUser ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
             {currentUser ? (
-              <img
+              <Image
                 className={cx('user-avatar')}
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShIVe0RbT9XXASvPkF-Utai91yzOhjTkM4ag&usqp=CAU"
                 alt="Nguyễn văn a"
