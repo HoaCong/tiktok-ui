@@ -14,6 +14,7 @@
   height: 100%;
   width: 1150px;
   display: flex;
+  padding: 0 var(--default-layout-hoorizontal-spacer);
   align-items: center;
   justify-content: space-between;
 }
@@ -92,4 +93,5 @@
   margin-left: 20px;
   padding: 4px 8px;
   background: transparent;
+  cursor: pointer;
 }
