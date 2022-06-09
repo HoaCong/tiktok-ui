@@ -7,8 +7,8 @@ import 'tippy.js/dist/tippy.css';
 import AccountItem from '~/components/AccountItem';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import { useDebounce } from '~/hooks';
+import * as searchServices from '~/apiServices/searchService';
 import styles from './Search.module.scss';
-
 const cx = classNames.bind(styles);
 
 function Search() {
@@ -25,16 +25,17 @@ function Search() {
       setSeatchResult([]);
       return;
     }
-    setLoading(true);
-    fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(debounced)}&type=less`)
-      .then((res) => res.json())
-      .then((res) => {
-        setSeatchResult(res.data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+
+    const fetchApi = async () => {
+      setLoading(true);
+
+      const result = await searchServices.search(debounced);
+      setSeatchResult(result);
+
+      setLoading(false);
+    };
+
+    fetchApi();
   }, [debounced]);
 
   const handleClear = () => {
