@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import 'tippy.js/dist/tippy.css';
 import AccountItem from '~/components/AccountItem';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
+import { useDebounce } from '~/hooks';
 import styles from './Search.module.scss';
 
 const cx = classNames.bind(styles);
@@ -17,14 +18,15 @@ function Search() {
   const [loading, setLoading] = useState(false);
 
   const inputRef = useRef();
+  const debounced = useDebounce(searchValue, 500);
 
   useEffect(() => {
-    if (!searchValue.trim()) {
+    if (!debounced.trim()) {
       setSeatchResult([]);
       return;
     }
     setLoading(true);
-    fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(searchValue)}&type=less`)
+    fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(debounced)}&type=less`)
       .then((res) => res.json())
       .then((res) => {
         setSeatchResult(res.data);
@@ -33,7 +35,7 @@ function Search() {
       .catch(() => {
         setLoading(false);
       });
-  }, [searchValue]);
+  }, [debounced]);
 
   const handleClear = () => {
     setSeatchValue('');
