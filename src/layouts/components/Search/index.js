@@ -4,15 +4,15 @@ import HeadLessTippy from '@tippyjs/react/headless';
 import classNames from 'classnames/bind';
 import { useEffect, useRef, useState } from 'react';
 import 'tippy.js/dist/tippy.css';
+import * as searchServices from '~/apiServices/searchService';
 import AccountItem from '~/components/AccountItem';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import { useDebounce } from '~/hooks';
-import * as searchServices from '~/apiServices/searchService';
 import styles from './Search.module.scss';
 const cx = classNames.bind(styles);
 
 function Search() {
-  const [searchValue, setSeatchValue] = useState('');
+  const [searchValue, setSearchValue] = useState('');
   const [searchResult, setSeatchResult] = useState([]);
   const [showResult, setShowResult] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -39,12 +39,17 @@ function Search() {
   }, [debounced]);
 
   const handleClear = () => {
-    setSeatchValue('');
+    setSearchValue('');
     inputRef.current.focus();
   };
 
   const handleHideResult = () => {
     setShowResult(false);
+  };
+
+  const handleChange = (e) => {
+    const keyword = e.target.value;
+    if (!keyword.startsWith(' ') && keyword.trim()) return setSearchValue(e.target.value);
   };
   return (
     <HeadLessTippy
@@ -68,7 +73,7 @@ function Search() {
           placeholder="Search accounts and videos"
           spellCheck={false}
           value={searchValue}
-          onChange={(e) => setSeatchValue(e.target.value)}
+          onChange={handleChange}
           onFocus={() => setShowResult(true)}
         />
         {!!searchValue && !loading && (
