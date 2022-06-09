@@ -2,7 +2,7 @@ import { faCircleXmark, faMagnifyingGlass, faSpinner } from '@fortawesome/free-s
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HeadLessTippy from '@tippyjs/react/headless';
 import classNames from 'classnames/bind';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import 'tippy.js/dist/tippy.css';
 import AccountItem from '~/components/AccountItem';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
@@ -14,8 +14,26 @@ function Search() {
   const [searchValue, setSeatchValue] = useState('');
   const [searchResult, setSeatchResult] = useState([]);
   const [showResult, setShowResult] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const inputRef = useRef();
+
+  useEffect(() => {
+    if (!searchValue.trim()) {
+      setSeatchResult([]);
+      return;
+    }
+    setLoading(true);
+    fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(searchValue)}&type=less`)
+      .then((res) => res.json())
+      .then((res) => {
+        setSeatchResult(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, [searchValue]);
 
   const handleClear = () => {
     setSeatchValue('');
@@ -33,10 +51,9 @@ function Search() {
         <div className={cx('search-result')} tabIndex="-1" {...attrs}>
           <PopperWrapper>
             <h4 className={cx('search-title')}>Accounts</h4>
-            <AccountItem />
-            <AccountItem />
-            <AccountItem />
-            <AccountItem />
+            {searchResult.map((result) => (
+              <AccountItem key={result.id} data={result} />
+            ))}
           </PopperWrapper>
         </div>
       )}
@@ -51,13 +68,13 @@ function Search() {
           onChange={(e) => setSeatchValue(e.target.value)}
           onFocus={() => setShowResult(true)}
         />
-        {!!searchValue && (
+        {!!searchValue && !loading && (
           <button className={cx('clear')} onClick={handleClear}>
             <FontAwesomeIcon icon={faCircleXmark} />
           </button>
         )}
-        {/* <FontAwesomeIcon className={cx('loading')} icon={faSpinner} /> */}
-        <button className={cx('search-btn')} onClick={() => setSeatchResult(['sad'])}>
+        {loading && <FontAwesomeIcon className={cx('loading')} icon={faSpinner} />}
+        <button className={cx('search-btn')} onClick={() => {}}>
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </button>
       </div>
